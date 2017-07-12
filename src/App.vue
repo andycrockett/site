@@ -12,7 +12,14 @@
             </div>
         </header>
         <div class="graphics">
-            <canvas ref="canvas"></canvas>
+            <canvas ref="canvas"
+                    :width="settings.canvasWidth * settings.pixelRatio"
+                    :height="settings.canvasHeight * settings.pixelRatio"
+                    :style="{
+                        width: settings.canvasWidth + 'px',
+                        height: settings.canvasHeight + 'px'
+                    }"
+            ></canvas>
         </div>
     </div>
 </template>
@@ -23,16 +30,18 @@
         data: () => ({
             settings: {
                 bubbleCount: 50,
-                maxDiam: 160,
-                minDiam: 40,
+                canvasWidth: 0,
+                canvasHeight: 0,
+                pixelRatio: window.devicePixelRatio || 1
             },
             bubbles: [],
             text: 'a n d y _ c r o c k e t t ;'.split(' ')
         }),
         mounted() {
+            this.setupBubbles();
             setTimeout(() => {
                 this.addLetter(this.text, 0)
-                this.doBubbles();
+                this.animateBubbles();
             }, 2000);
             window.addEventListener('resize', this.resizeCanvas)
         },
@@ -50,12 +59,9 @@
                 }
             },
             resizeCanvas() {
-                let width  = window.innerWidth;
-                let height = window.innerHeight + 4;
-                let canvas = this.$refs.canvas;
-
-                canvas.width  = width;
-                canvas.height = height;
+                let width = this.settings.canvasWidth = window.innerWidth;
+                let height = this.settings.canvasHeight = window.innerHeight + 4;
+                this.settings.pixelRatio = window.devicePixelRatio
 
                 if (this.bubbles.length > 0) {
                     for (let i = 0; i < this.bubbles.length; i++) {
@@ -64,23 +70,19 @@
                     }
                 }
             },
-            doBubbles() {
-                let width  = window.innerWidth;
-                let height = window.innerHeight + 4;
-                let canvas = this.$refs.canvas;
+            setupBubbles() {
+                let width = this.settings.canvasWidth = window.innerWidth;
+                let height = this.settings.canvasHeight = window.innerHeight + 4;
+                let maxDiam = Math.min(Math.max(width / 10, 50), 160);
+                let minDiam = Math.max(width / 50, 20);
 
-                canvas.width  = width;
-                canvas.height = height;
-
-                let ctx = canvas.getContext('2d');
                 for (let i = 0; i < this.settings.bubbleCount; i++) {
-
-                    // give random diameter, x, y, opacity, speed, amplitude, and outline or fill
-                    let diam      = (Math.random() * (this.settings.maxDiam - this.settings.minDiam)) + this.settings.minDiam,
+                    // give random diameter, x, y, opacity, speed, amplitude
+                    let diam      = (Math.random() * (maxDiam - minDiam)) + minDiam,
                         x         = Math.floor(Math.random() * width),
                         y         = height + (diam / 2) + Math.random() * 100,
                         opacity   = Math.random(1),
-                        speed     = Math.random() + 0.3,
+                        speed     = Math.random() + Math.floor(height / 2000),
                         amplitude = (Math.random() * 50) + 45;
 
                     // store bubble properties in memory
@@ -96,14 +98,17 @@
                     };
 
                     this.bubbles.push(bubble);
-
                 }
+            },
+            animateBubbles() {
 
+                let ctx = this.$refs.canvas.getContext('2d');
+                ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
                 let count   = 0;
                 // called on each frame
                 let animate = () => {
-                    width  = window.innerWidth;
-                    height = window.innerHeight + 4;
+                    let width  = this.settings.canvasWidth;
+                    let height = this.settings.canvasHeight;
 
                     count++;
 
@@ -119,7 +124,7 @@
                         }
 
                         // move upwards, with repetitive oscillation on the x-axis
-                        b.y = b.y - b.speed + Math.cos(count / b.amplitude);
+                        b.y = (b.y - b.speed) - Math.sin(count / b.amplitude);
                         b.x = b.startX + Math.sin(count / b.amplitude) * 100;
 
                         ctx.beginPath();
