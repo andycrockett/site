@@ -11,16 +11,8 @@
                 <a href="https://www.linkedin.com/in/andy-crockett-97695a91/">LinkedIn</a>
             </div>
         </header>
-        <div class="graphics">
-            <canvas ref="canvas"
-                    :width="settings.canvasWidth * settings.pixelRatio"
-                    :height="settings.canvasHeight * settings.pixelRatio"
-                    :style="{
-                        width: settings.canvasWidth + 'px',
-                        height: settings.canvasHeight + 'px'
-                    }"
-            ></canvas>
-        </div>
+        <canvas ref="canvas"
+                :style="{width: settings.canvasWidth + 'px', height: settings.canvasHeight + 'px'}"></canvas>
     </div>
 </template>
 
@@ -61,7 +53,11 @@
             resizeCanvas() {
                 let width = this.settings.canvasWidth = window.innerWidth;
                 let height = this.settings.canvasHeight = window.innerHeight + 4;
-                this.settings.pixelRatio = window.devicePixelRatio
+                let ratio = this.settings.pixelRatio = window.devicePixelRatio
+                this.$refs.canvas.width  = width * ratio;
+                this.$refs.canvas.height = height * ratio;
+                let canvas               = this.$refs.canvas.getContext('2d');
+                canvas.scale(this.settings.pixelRatio, this.settings.pixelRatio)
 
                 if (this.bubbles.length > 0) {
                     for (let i = 0; i < this.bubbles.length; i++) {
@@ -73,8 +69,15 @@
             setupBubbles() {
                 let width = this.settings.canvasWidth = window.innerWidth;
                 let height = this.settings.canvasHeight = window.innerHeight + 4;
+                let ratio = this.settings.pixelRatio = window.devicePixelRatio
                 let maxDiam = Math.min(Math.max(width / 10, 50), 160);
                 let minDiam = Math.max(width / 50, 20);
+
+                this.$refs.canvas.width  = width * ratio;
+                this.$refs.canvas.height = height * ratio;
+
+                let canvas = this.$refs.canvas.getContext('2d');
+                canvas.scale(ratio, ratio)
 
                 for (let i = 0; i < this.settings.bubbleCount; i++) {
                     // give random diameter, x, y, opacity, speed, amplitude
@@ -103,7 +106,6 @@
             animateBubbles() {
 
                 let ctx = this.$refs.canvas.getContext('2d');
-                ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
                 let count   = 0;
                 // called on each frame
                 let animate = () => {
