@@ -9,18 +9,18 @@
 }
 
 .title {
-    font-size: calc(1.5rem + 3vw);
+    font-size: 0;
     font-weight: 500;
     margin-bottom: 1rem;
     user-select: none;
     cursor: default;
     white-space: nowrap;
-    &:before {
-        display: inline-block;
-        vertical-align: middle;
-        content: '_';
-        animation: type_name 5s forwards;
-    }
+}
+
+.title-text {
+    font-size: calc(1.5rem + 3vw);
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .cursor {
@@ -56,35 +56,34 @@ a {
     }
 }
 
-@keyframes type_name {
-    0% { content: "" }
-    39% { content: "" }
-    40% { content: "a" }
-    44% { content: "an" }
-    50% { content: "and" }
-    58% { content: "andy" }
-    64% { content: "andy_" }
-    70% { content: "andy_c" }
-    75% { content: "andy_cr" }
-    80% { content: "andy_cro" }
-    83% { content: "andy_croc" }
-    88% { content: "andy_crock" }
-    92% { content: "andy_crocke" }
-    95% { content: "andy_crocket" }
-    98% { content: "andy_crockett" }
-    100% { content: "andy_crockett;" }
-}
-
 @keyframes blinking {
-    0% { border-color: transparent; }
-    59.9% { border-color: transparent; }
-    60.1% { border-color: #505050; }
-    100% { border-color: #505050; }
+    0% {
+        border-color: transparent;
+    }
+    59.9% {
+        border-color: transparent;
+    }
+    60.1% {
+        border-color: #505050;
+    }
+    100% {
+        border-color: #505050;
+    }
 }
 
 @keyframes reveal {
-    0% { opacity: 0; max-width: 0; }
-    39% { opacity: 0; }
-    50% { max-width: 0; }
-    100% { opacity: 1; max-width: 200px; }
+    0% {
+        opacity: 0;
+        max-width: 0;
+    }
+    39% {
+        opacity: 0;
+    }
+    50% {
+        max-width: 0;
+    }
+    100% {
+        opacity: 1;
+        max-width: 200px;
+    }
 }
