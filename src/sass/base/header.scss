@@ -19,6 +19,7 @@ header {
     font-size: calc(1.5rem + 3vw);
     display: inline-block;
     vertical-align: middle;
+    text-shadow: 0 calc(2px + 0.33vw) rgba(0, 0, 0, 0.25);
 }
 
 .cursor {
