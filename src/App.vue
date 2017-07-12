@@ -36,11 +36,11 @@
                 this.animateBubbles();
             }, 2000);
             window.addEventListener('resize', this.resizeCanvas)
-            window.addEventListener('deviceorientation', this.resizeCanvas)
+            window.addEventListener('orientationchange', this.resizeCanvas)
         },
         beforeDestroy() {
             window.removeEventListener('resize', this.resizeCanvas)
-            window.removeEventListener('deviceorientation', this.resizeCanvas)
+            window.removeEventListener('orientationchange', this.resizeCanvas)
         },
         methods: {
             addLetter(letterArray, position) {
