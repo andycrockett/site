@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Fira+Mono:400,500,700&subset=latin");
 
+$bg-color: #4f8594;
+
 html, body {
     margin: 0;
     padding: 0;
@@ -13,16 +15,16 @@ body {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background-color: #008894;
+    background-color: $bg-color;
     animation: hueRotate 30s infinite ease-in-out;
 }
 
 @keyframes hueRotate {
-    0% { background-color: adjust_hue(#008894, 30); }
-    18% { background-color: adjust_hue(#008894, 0); }
-    36% { background-color: adjust_hue(#008894, -30); }
-    54% { background-color: adjust_hue(#008894, -60); }
-    72% { background-color: adjust_hue(#008894, -30); }
-    90% { background-color: adjust_hue(#008894, 0); }
-    100% { background-color: adjust_hue(#008894, 30); }
+    0% { background-color: adjust_hue($bg-color, 30); }
+    18% { background-color: adjust_hue($bg-color, 0); }
+    36% { background-color: adjust_hue($bg-color, -30); }
+    54% { background-color: adjust_hue($bg-color, -60); }
+    72% { background-color: adjust_hue($bg-color, -30); }
+    90% { background-color: adjust_hue($bg-color, 0); }
+    100% { background-color: adjust_hue($bg-color, 30); }
 }

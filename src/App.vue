@@ -7,8 +7,10 @@
             </div>
             <div class="links">
                 > <a href="https://github.com/andycrockett">github</a>
-                &nbsp;
+                <br/>
                 > <a href="https://www.linkedin.com/in/andy-crockett-97695a91/">LinkedIn</a>
+                <br/>
+                > <a href="https://facebook.com/andyhcrockett">Facebook</a>
             </div>
         </header>
         <canvas ref="canvas"
@@ -73,7 +75,7 @@
                 let height = this.settings.canvasHeight = window.innerHeight + 4;
                 let ratio = this.settings.pixelRatio = window.devicePixelRatio
                 let maxDiam = Math.min(Math.max(width / 20, 50), 160);
-                let minDiam = Math.max(width / 60, 20);
+                let minDiam = Math.max(width / 60, 10);
 
                 this.$refs.canvas.width  = width * ratio;
                 this.$refs.canvas.height = height * ratio;

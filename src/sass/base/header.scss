@@ -9,10 +9,10 @@ header {
 .title {
     font-size: 0;
     font-weight: 500;
-    margin-bottom: 1rem;
     user-select: none;
     cursor: default;
     white-space: nowrap;
+    margin-bottom: 0.5rem;
 }
 
 .title-text {
@@ -35,16 +35,22 @@ header {
 .links {
     user-select: none;
     font-family: Silkscreen;
-    font-size: calc(1rem + 0.75vw);
-    color: rgba(255,255,255, 0.5);
+    font-size: calc(1rem + 1vw);
+    color: rgba(255, 255, 255, 0.5);
     opacity: 0;
     white-space: nowrap;
     animation: reveal 5s forwards;
     cursor: default;
-    a:hover {
-        color: #0F0;
-        &:nth-child(2) {
+    line-height: 2.5rem;
+    a {
+        &:hover {
             color: #FF0;
+            &:nth-of-type(2) {
+                color: #0F0;
+            }
+            &:nth-of-type(3) {
+                color: #0FF;
+            }
         }
     }
 }
