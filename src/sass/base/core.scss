@@ -9,8 +9,20 @@ body {
     font-family: 'Fira Mono', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #505050;
+    color: #fff;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    background-color: #008894;
+    animation: hueRotate 30s infinite ease-in-out;
+}
+
+@keyframes hueRotate {
+    0% { background-color: adjust_hue(#008894, 30); }
+    18% { background-color: adjust_hue(#008894, 0); }
+    36% { background-color: adjust_hue(#008894, -30); }
+    54% { background-color: adjust_hue(#008894, -60); }
+    72% { background-color: adjust_hue(#008894, -30); }
+    90% { background-color: adjust_hue(#008894, 0); }
+    100% { background-color: adjust_hue(#008894, 30); }
 }

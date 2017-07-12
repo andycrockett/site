@@ -36,10 +36,17 @@ header {
     user-select: none;
     font-family: Silkscreen;
     font-size: calc(1rem + 0.75vw);
-    color: #999;
+    color: rgba(255,255,255, 0.5);
     opacity: 0;
     white-space: nowrap;
     animation: reveal 5s forwards;
+    cursor: default;
+    a:hover {
+        color: #0F0;
+        &:nth-child(2) {
+            color: #FF0;
+        }
+    }
 }
 
 a {
@@ -47,10 +54,6 @@ a {
     text-decoration: none;
     &:hover {
         cursor: pointer;
-        color: #23527c;
-        &:nth-child(2) {
-            color: #2ca02c;
-        }
     }
 }
 
@@ -62,10 +65,10 @@ a {
         border-color: transparent;
     }
     60.1% {
-        border-color: #505050;
+        border-color: #FFF;
     }
     100% {
-        border-color: #505050;
+        border-color: #FFF;
     }
 }
 

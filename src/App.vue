@@ -2,13 +2,13 @@
     <div id="app">
         <header>
             <div class="title">
-                <div class="title-text" ref="text"></div>
+                <a href="/" class="title-text" ref="text"></a>
                 <div class="cursor"></div>
             </div>
             <div class="links">
-                <a href="https://github.com/andycrockett">github</a>
-                &nbsp;&middot;&nbsp;
-                <a href="https://www.linkedin.com/in/andy-crockett-97695a91/">LinkedIn</a>
+                > <a href="https://github.com/andycrockett">github</a>
+                &nbsp;
+                > <a href="https://www.linkedin.com/in/andy-crockett-97695a91/">LinkedIn</a>
             </div>
         </header>
         <canvas ref="canvas"
@@ -21,7 +21,7 @@
         name: 'app',
         data: () => ({
             settings: {
-                bubbleCount: 50,
+                bubbleCount: 60,
                 canvasWidth: 0,
                 canvasHeight: 0,
                 pixelRatio: window.devicePixelRatio || 1
@@ -66,14 +66,14 @@
                             this.bubbles[i].origWidth = width
                         }
                     }
-                }, 100)
+                }, 200)
             },
             setupBubbles() {
                 let width = this.settings.canvasWidth = window.innerWidth;
                 let height = this.settings.canvasHeight = window.innerHeight + 4;
                 let ratio = this.settings.pixelRatio = window.devicePixelRatio
-                let maxDiam = Math.min(Math.max(width / 10, 50), 160);
-                let minDiam = Math.max(width / 50, 20);
+                let maxDiam = Math.min(Math.max(width / 20, 50), 160);
+                let minDiam = Math.max(width / 60, 20);
 
                 this.$refs.canvas.width  = width * ratio;
                 this.$refs.canvas.height = height * ratio;
@@ -86,9 +86,9 @@
                     let diam      = (Math.random() * (maxDiam - minDiam)) + minDiam,
                         x         = Math.floor(Math.random() * width),
                         y         = height + (diam / 2) + Math.random() * 100,
-                        opacity   = Math.random(1),
+                        opacity   = Math.random() * 0.3,
                         speed     = Math.random() + Math.floor(height / 2000),
-                        amplitude = (Math.random() * 50) + 45;
+                        amplitude = (Math.random() * 200) + 100;
 
                     // store bubble properties in memory
                     let bubble = {
@@ -99,7 +99,7 @@
                         radius: diam / 2,
                         speed: speed,
                         amplitude: amplitude,
-                        color: 'rgba(' + Math.round((Math.random() * 200)) + ',200,200,' + Math.min((Math.max(opacity, 0.1)), 0.4) + ')'
+                        color: 'rgba(255,255,255,' + Math.min((Math.max(opacity, 0.02)), 0.3) + ')'
                     };
 
                     this.bubbles.push(bubble);
@@ -107,7 +107,7 @@
             },
             animateBubbles() {
 
-                let ctx = this.$refs.canvas.getContext('2d');
+                let ctx     = this.$refs.canvas.getContext('2d');
                 let count   = 0;
                 // called on each frame
                 let animate = () => {
@@ -128,7 +128,7 @@
                         }
 
                         // move upwards, with repetitive oscillation on the x-axis
-                        b.y = (b.y - b.speed) - Math.sin(count / b.amplitude);
+                        b.y = (b.y - b.speed);
                         b.x = b.startX + Math.sin(count / b.amplitude) * 100;
 
                         ctx.beginPath();
