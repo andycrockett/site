@@ -36,11 +36,9 @@
                 this.animateBubbles();
             }, 2000);
             window.addEventListener('resize', this.resizeCanvas)
-            window.addEventListener('orientationchange', this.resizeCanvas)
         },
         beforeDestroy() {
             window.removeEventListener('resize', this.resizeCanvas)
-            window.removeEventListener('orientationchange', this.resizeCanvas)
         },
         methods: {
             addLetter(letterArray, position) {
@@ -53,20 +51,22 @@
                 }
             },
             resizeCanvas() {
-                let width = this.settings.canvasWidth = window.innerWidth;
-                let height = this.settings.canvasHeight = window.innerHeight + 4;
-                let ratio = this.settings.pixelRatio = window.devicePixelRatio
-                this.$refs.canvas.width  = width * ratio;
-                this.$refs.canvas.height = height * ratio;
-                let canvas               = this.$refs.canvas.getContext('2d');
-                canvas.scale(this.settings.pixelRatio, this.settings.pixelRatio)
+                setTimeout(() => {
+                    let width = this.settings.canvasWidth = window.innerWidth;
+                    let height = this.settings.canvasHeight = window.innerHeight + 4;
+                    let ratio = this.settings.pixelRatio = window.devicePixelRatio
+                    this.$refs.canvas.width  = width * ratio;
+                    this.$refs.canvas.height = height * ratio;
+                    let canvas               = this.$refs.canvas.getContext('2d');
+                    canvas.scale(this.settings.pixelRatio, this.settings.pixelRatio)
 
-                if (this.bubbles.length > 0) {
-                    for (let i = 0; i < this.bubbles.length; i++) {
-                        this.bubbles[i].startX    = (width / this.bubbles[i].origWidth) * this.bubbles[i].startX
-                        this.bubbles[i].origWidth = width
+                    if (this.bubbles.length > 0) {
+                        for (let i = 0; i < this.bubbles.length; i++) {
+                            this.bubbles[i].startX    = (width / this.bubbles[i].origWidth) * this.bubbles[i].startX
+                            this.bubbles[i].origWidth = width
+                        }
                     }
-                }
+                }, 100)
             },
             setupBubbles() {
                 let width = this.settings.canvasWidth = window.innerWidth;
