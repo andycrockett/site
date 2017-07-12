@@ -86,11 +86,11 @@
                 for (let i = 0; i < this.settings.bubbleCount; i++) {
                     // give random diameter, x, y, opacity, speed, amplitude
                     let diam      = (Math.random() * (maxDiam - minDiam)) + minDiam,
-                        x         = Math.floor(Math.random() * width),
+                        x         = Math.floor(Math.random() * (width / 1.5)) + (width / 6),
                         y         = height + (diam / 2) + Math.random() * 100,
                         opacity   = Math.random() * 0.3,
-                        speed     = Math.random() + Math.floor(height / 2000),
-                        amplitude = (Math.random() * 200) + 100;
+                        speed     = Math.max(Math.min(Math.random(), 0.8), 0.1),
+                        amplitude = (Math.random() * 400) + 180;
 
                     // store bubble properties in memory
                     let bubble = {
@@ -131,7 +131,7 @@
 
                         // move upwards, with repetitive oscillation on the x-axis
                         b.y = (b.y - b.speed);
-                        b.x = b.startX + Math.sin(count / b.amplitude) * 100;
+                        b.x = b.startX + Math.sin((count * 2) / b.amplitude) * 100;
 
                         ctx.beginPath();
 
