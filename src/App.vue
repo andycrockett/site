@@ -74,7 +74,7 @@
                 let width = this.settings.canvasWidth = window.innerWidth;
                 let height = this.settings.canvasHeight = window.innerHeight + 4;
                 let ratio = this.settings.pixelRatio = window.devicePixelRatio
-                let maxDiam = 40;
+                let maxDiam = 30;
                 let minDiam = 5;
 
                 this.$refs.canvas.width  = width * ratio;
