@@ -32,9 +32,6 @@
             text: 'a n d y _ c r o c k e t t ;'.split(' ')
         }),
         mounted() {
-            // send page view event
-            this.$ga.page('/');
-
             this.setupBubbles();
             setTimeout(() => {
                 this.addLetter(this.text, 0)
