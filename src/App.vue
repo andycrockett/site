@@ -23,7 +23,7 @@
         name: 'app',
         data: () => ({
             settings: {
-                bubbleCount: 60,
+                bubbleCount: 100,
                 canvasWidth: 0,
                 canvasHeight: 0,
                 pixelRatio: window.devicePixelRatio || 1
@@ -74,8 +74,8 @@
                 let width = this.settings.canvasWidth = window.innerWidth;
                 let height = this.settings.canvasHeight = window.innerHeight + 4;
                 let ratio = this.settings.pixelRatio = window.devicePixelRatio
-                let maxDiam = Math.min(Math.max(width / 20, 50), 160);
-                let minDiam = Math.max(width / 60, 10);
+                let maxDiam = 40;
+                let minDiam = 5;
 
                 this.$refs.canvas.width  = width * ratio;
                 this.$refs.canvas.height = height * ratio;
@@ -89,7 +89,7 @@
                         x         = Math.floor(Math.random() * (width / 1.5)) + (width / 6),
                         y         = height + (diam / 2) + Math.random() * 100,
                         opacity   = Math.random() * 0.3,
-                        speed     = Math.max(Math.min(Math.random(), 0.8), 0.1),
+                        speed     = Math.max((Math.random() + Math.random()) * Math.min(Math.random(), 0.8), 0.15),
                         amplitude = (Math.random() * 400) + 180;
 
                     // store bubble properties in memory
