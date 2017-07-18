@@ -17,8 +17,8 @@
                 canvasHeight: 0,
                 pixelRatio: window.devicePixelRatio || 1
             },
-            anchorX: false,
-            anchorY: false,
+            anchorX: (window.innerWidth / 2) - (window.innerHeight / 8),
+            anchorY: (window.innerHeight / 2),
             anchorActive: false,
             bubbles: [],
         }),
@@ -47,8 +47,8 @@
                 this.anchorActive = true
             },
             handlePressUp(e) {
-                this.anchorX      = false
-                this.anchorY      = false
+                this.anchorX      = (window.innerWidth / 2) - (window.innerHeight / 8)
+                this.anchorY      = (window.innerHeight / 2)
                 this.anchorActive = false
             },
             handlePan(e) {
@@ -69,8 +69,8 @@
                 }
             },
             handleMouseUp(e) {
-                this.anchorX      = false
-                this.anchorY      = false
+                this.anchorX      = (window.innerWidth / 2) - (window.innerHeight / 8)
+                this.anchorY      = (window.innerHeight / 2)
                 this.anchorActive = false
             },
             resizeCanvas() {
