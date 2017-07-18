@@ -1,8 +1,10 @@
 <template>
-    <canvas ref="canvas" :style="{
-        width: settings.canvasWidth + 'px',
-        height: settings.canvasHeight + 'px'
-    }"></canvas>
+    <v-touch @panstart="handlePress" @panend="handlePressUp" @pan="handlePan">
+        <canvas ref="canvas" :style="{
+            width: settings.canvasWidth + 'px',
+            height: settings.canvasHeight + 'px'
+        }"></canvas>
+    </v-touch>
 </template>
 
 <script>
@@ -39,6 +41,22 @@
             window.removeEventListener('tap', this.handleClick)
         },
         methods: {
+            handlePress(e) {
+                this.anchorX      = e.center.x
+                this.anchorY      = e.center.y
+                this.anchorActive = true
+            },
+            handlePressUp(e) {
+                this.anchorX      = false
+                this.anchorY      = false
+                this.anchorActive = false
+            },
+            handlePan(e) {
+                if (this.anchorActive) {
+                    this.anchorX = e.center.x
+                    this.anchorY = e.center.y
+                }
+            },
             handleMouseDown(e) {
                 this.anchorX      = e.clientX
                 this.anchorY      = e.clientY
@@ -113,7 +131,7 @@
                     let width  = this.settings.canvasWidth;
                     let height = this.settings.canvasHeight;
 
-                    count += 3;
+                    count++;
 
                     // clear canvas
                     ctx.clearRect(0, 0, width, height);
@@ -121,16 +139,18 @@
                     for (let i = 0; i < this.bubbles.length; i++) {
                         let b = this.bubbles[i];
 
-                        // if reached top, send back to bottom
+                        // if reached top, send to bottom
                         if (b.y <= b.radius * -2) {
                             b.y = height + b.radius;
                         }
-
+                        // if reached bottom, send to top
+                        if (b.y >= height + (b.radius * 2)) {
+                            b.y = -b.radius * 2;
+                        }
                         // if reached left side, send to right side
                         if (b.x < -b.radius * 2) {
                             b.x = width + (b.radius * 2);
                         }
-
                         // if reached right side, send to left side
                         if (b.x > width + (b.radius * 2)) {
                             b.x = -b.radius * 2;
@@ -142,9 +162,10 @@
                         let xModifier = 0
 
                         if (this.anchorX !== false) {
-                            let angle = Math.atan2(b.y - this.anchorY, b.x - this.anchorX);
-                            yModifier = Math.sin(angle) * (b.speed * 3)
-                            xModifier = Math.cos(angle) * Math.abs(b.speed * 10)
+                            let distance = Math.sqrt(Math.pow(b.y - this.anchorY, 2) + Math.pow(b.x - this.anchorX, 2))
+                            let angle    = Math.atan2(b.y - this.anchorY, b.x - this.anchorX);
+                            yModifier    = -Math.sin(angle) * Math.max((Math.min(width / 4, 300) - distance) / Math.min(width / 4, 300), 0)
+                            xModifier    = -Math.cos(angle) * Math.max((Math.min(width / 4, 300) - distance) / Math.min(width / 4, 300), 0)
                         }
 
                         b.yMomentum = (b.yMomentum + b.speed + yModifier) * b.friction
