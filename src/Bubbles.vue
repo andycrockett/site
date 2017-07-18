@@ -100,21 +100,21 @@
                 for (let i = 0; i < this.settings.bubbleCount; i++) {
                     // give random diameter, x, y, opacity, speed, amplitude
                     let diam      = (Math.random() * (maxDiam - minDiam)) + minDiam,
-                        x         = Math.floor(Math.random() * width),
+                        x         = Math.floor(Math.random() * (width / 1.5) + (width / 6)),
                         y         = height + (diam / 2) + Math.random() * 100,
                         opacity   = Math.random() * 0.3,
-                        speed     = Math.max((Math.random() + Math.random()) * Math.min(Math.random(), 0.8), 0.15),
                         amplitude = (Math.random() * 400) + 180;
 
                     // store bubble properties in memory
                     let bubble = {
                         x: x,
                         y: y,
-                        friction: 0.7 + (Math.random() / 10),
-                        xMomentum: (speed * 300),
+                        offset: i * 30,
+                        friction: 0.75 + (Math.random() / 10),
+                        xMomentum: 0,
                         yMomentum: 0,
                         radius: diam / 2,
-                        speed: Math.min(((0.5 + Math.random()) / diam) * 2, 0.9),
+                        speed: Math.min((3 + Math.random()) * Math.max((0.25 + Math.random()) / diam, 0.01), 1),
                         amplitude: amplitude,
                         color: 'rgba(255,255,255,' + Math.min((Math.max(opacity, 0.02)), 0.3) + ')'
                     };
@@ -131,7 +131,7 @@
                     let width  = this.settings.canvasWidth;
                     let height = this.settings.canvasHeight;
 
-                    count++;
+                    count += 2;
 
                     // clear canvas
                     ctx.clearRect(0, 0, width, height);
@@ -157,7 +157,7 @@
                         }
 
                         // move upwards, with repetitive oscillation on the x-axis
-                        let xSpeed    = Math.sin(count / b.amplitude) / 4
+                        let xSpeed    = Math.sin((count + b.offset) / b.amplitude) / 6
                         let yModifier = 0
                         let xModifier = 0
 
