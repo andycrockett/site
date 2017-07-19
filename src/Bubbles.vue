@@ -150,8 +150,8 @@
                         if (this.anchorX !== false) {
                             let distance = Math.sqrt(Math.pow(b.y - this.anchorY, 2) + Math.pow(b.x - this.anchorX, 2))
                             let angle    = Math.atan2(b.y - this.anchorY, b.x - this.anchorX);
-                            yModifier    = -Math.sin(angle) * Math.max((Math.min(width / 8, 400) - distance) / Math.min(width / 12, 200), 0)
-                            xModifier    = -Math.cos(angle) * Math.max((Math.min(width / 8, 400) - distance) / Math.min(width / 12, 200), 0)
+                            yModifier    = -Math.sin(angle) * Math.max((Math.min(width / 8, 400) - distance) / Math.min(width / 12, 300), 0)
+                            xModifier    = -Math.cos(angle) * Math.max((Math.min(width / 8, 400) - distance) / Math.min(width / 12, 300), 0)
                             if (this.invertAnchor) {
                                 yModifier = -yModifier
                                 xModifier = -xModifier
