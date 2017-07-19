@@ -1,5 +1,5 @@
 <template>
-    <v-touch @panstart="handlePress" @panend="handlePressUp" @pan="handlePan">
+    <v-touch @pan="handlePan">
         <canvas ref="canvas" :style="{
             width: settings.canvasWidth + 'px',
             height: settings.canvasHeight + 'px'
@@ -17,9 +17,9 @@
                 canvasHeight: 0,
                 pixelRatio: window.devicePixelRatio || 1
             },
-            anchorX: (window.innerWidth / 2) - (window.innerHeight / 8),
-            anchorY: (window.innerHeight / 2),
-            anchorActive: false,
+            anchorX: false,
+            anchorY: false,
+            invertAnchor: false,
             bubbles: [],
         }),
         mounted() {
@@ -28,74 +28,58 @@
                 this.animateBubbles();
             }, 2000);
             window.addEventListener('resize', this.resizeCanvas)
-            window.addEventListener('mousedown', this.handleMouseDown)
             window.addEventListener('mousemove', this.handleMouseMove)
+            window.addEventListener('mousedown', this.handleMouseDown)
             window.addEventListener('mouseup', this.handleMouseUp)
-            window.addEventListener('tap', this.handleClick)
         },
         beforeDestroy() {
             window.removeEventListener('resize', this.resizeCanvas)
-            window.removeEventListener('mousedown', this.handleMouseDown)
             window.removeEventListener('mousemove', this.handleMouseMove)
+            window.removeEventListener('mousedown', this.handleMouseDown)
             window.removeEventListener('mouseup', this.handleMouseUp)
-            window.removeEventListener('tap', this.handleClick)
         },
         methods: {
-            handlePress(e) {
-                this.anchorX      = e.center.x
-                this.anchorY      = e.center.y
-                this.anchorActive = true
-            },
-            handlePressUp(e) {
-                this.anchorX      = (window.innerWidth / 2) - (window.innerHeight / 8)
-                this.anchorY      = (window.innerHeight / 2)
-                this.anchorActive = false
-            },
             handlePan(e) {
-                if (this.anchorActive) {
-                    this.anchorX = e.center.x
-                    this.anchorY = e.center.y
-                }
-            },
-            handleMouseDown(e) {
-                this.anchorX      = e.clientX
-                this.anchorY      = e.clientY
-                this.anchorActive = true
+                this.anchorX = e.center.x
+                this.anchorY = e.center.y
             },
             handleMouseMove(e) {
-                if (this.anchorActive) {
-                    this.anchorX = e.clientX
-                    this.anchorY = e.clientY
-                }
+                this.anchorX = e.clientX
+                this.anchorY = e.clientY
+            },
+            handleMouseDown(e) {
+                this.invertAnchor = true
             },
             handleMouseUp(e) {
-                this.anchorX      = (window.innerWidth / 2) - (window.innerHeight / 8)
-                this.anchorY      = (window.innerHeight / 2)
-                this.anchorActive = false
+                this.invertAnchor = false
             },
             resizeCanvas() {
+                // wait a bit for slower to devices to finish their resizing/reorientation
+                // otherwise incorrect values may be used
                 setTimeout(() => {
-                    let width = this.settings.canvasWidth = window.innerWidth;
-                    let height = this.settings.canvasHeight = window.innerHeight + 4;
+                    let canvas = this.$refs.canvas
+                    let width  = this.settings.canvasWidth = window.innerWidth
+                    let height = this.settings.canvasHeight = window.innerHeight
                     let ratio = this.settings.pixelRatio = window.devicePixelRatio
-                    this.$refs.canvas.width  = width * ratio;
-                    this.$refs.canvas.height = height * ratio;
-                    let canvas               = this.$refs.canvas.getContext('2d');
-                    canvas.scale(this.settings.pixelRatio, this.settings.pixelRatio)
+                    let ctx       = canvas.getContext('2d');
+                    canvas.width  = width * ratio;
+                    canvas.height = height * ratio;
+                    ctx.scale(this.settings.pixelRatio, this.settings.pixelRatio)
                 }, 200)
             },
             setupBubbles() {
-                let width = this.settings.canvasWidth = window.innerWidth;
-                let height = this.settings.canvasHeight = window.innerHeight + 4;
+                let width = this.settings.canvasWidth = window.innerWidth
+                let height = this.settings.canvasHeight = window.innerHeight
                 let ratio = this.settings.pixelRatio = window.devicePixelRatio
                 let maxDiam = 30;
                 let minDiam = 5;
 
-                this.$refs.canvas.width  = width * ratio;
-                this.$refs.canvas.height = height * ratio;
+                let canvas = this.$refs.canvas
+                let ctx    = canvas.getContext('2d');
 
-                let canvas = this.$refs.canvas.getContext('2d');
-                canvas.scale(ratio, ratio)
+                canvas.width  = width * ratio;
+                canvas.height = height * ratio;
+                ctx.scale(ratio, ratio)
 
                 for (let i = 0; i < this.settings.bubbleCount; i++) {
                     // give random diameter, x, y, opacity, speed, amplitude
@@ -157,15 +141,21 @@
                         }
 
                         // move upwards, with repetitive oscillation on the x-axis
+                        // use momentum for smoother motion
                         let xSpeed    = Math.sin((count + b.offset) / b.amplitude) / 6
                         let yModifier = 0
                         let xModifier = 0
 
+                        // use x/y modifier on momentum to push bubbles away from the anchor point when defined
                         if (this.anchorX !== false) {
                             let distance = Math.sqrt(Math.pow(b.y - this.anchorY, 2) + Math.pow(b.x - this.anchorX, 2))
                             let angle    = Math.atan2(b.y - this.anchorY, b.x - this.anchorX);
-                            yModifier    = -Math.sin(angle) * Math.max((Math.min(width / 4, 300) - distance) / Math.min(width / 4, 300), 0)
-                            xModifier    = -Math.cos(angle) * Math.max((Math.min(width / 4, 300) - distance) / Math.min(width / 4, 300), 0)
+                            yModifier    = -Math.sin(angle) * Math.max((Math.min(width / 8, 400) - distance) / Math.min(width / 12, 200), 0)
+                            xModifier    = -Math.cos(angle) * Math.max((Math.min(width / 8, 400) - distance) / Math.min(width / 12, 200), 0)
+                            if (this.invertAnchor) {
+                                yModifier = -yModifier
+                                xModifier = -xModifier
+                            }
                         }
 
                         b.yMomentum = (b.yMomentum + b.speed + yModifier) * b.friction
